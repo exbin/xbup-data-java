@@ -1,0 +1,20 @@
+group = 'org.exbin.xbup.data'
+ext.libraryName = 'XBUP Prog Library'
+ext.libraryDescription = 'Library for programming data types with XBUP support'
+
+apply from: '../modules.gradle'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.exbin.xbup:xbup-core:${xbupVersion}"
+    compile "org.exbin.xbup:xbup-catalog:${xbupVersion}"
+    testCompile group: 'junit', name: 'junit', version: '4.10'    
+}

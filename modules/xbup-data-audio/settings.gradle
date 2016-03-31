@@ -1,0 +1,3 @@
+rootProject.name = 'xbup-data-audio'
+
+apply from: '../modules-settings.gradle'

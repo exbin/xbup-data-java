@@ -1,0 +1,6 @@
+rootProject.name = 'xbup-data-java'
+
+include ":modules:xbup-data-audio"
+include ":modules:xbup-data-visual"
+include ":modules:xbup-data-math"
+include ":modules:xbup-data-prog"
