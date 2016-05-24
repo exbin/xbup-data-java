@@ -26,8 +26,8 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import org.exbin.xbup.core.block.XBBlockData;
-import org.exbin.xbup.core.block.XBEditableBlockData;
+import org.exbin.utils.binary_data.BinaryData;
+import org.exbin.utils.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.block.declaration.XBDeclBlockType;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.serial.param.XBPSequenceSerialHandler;
@@ -40,7 +40,7 @@ import org.exbin.xbup.core.ubnumber.type.UBNat32;
 /**
  * Simple panel audio wave.
  *
- * @version 0.2.0 2016/01/24
+ * @version 0.2.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
 public class XBWave implements XBPSequenceSerializable {
@@ -204,15 +204,15 @@ public class XBWave implements XBPSequenceSerializable {
 
     /**
      * Returns data for single tick.
-     * 
+     *
      * @param targetData target data
      * @param position tick position
      * @param channel channgel number
      */
-    public void getValue(XBEditableBlockData targetData, int position, int channel) {
+    public void getValue(EditableBinaryData targetData, int position, int channel) {
         int bytesPerSample = audioFormat.getSampleSizeInBits() >> 3;
         int dataPosition = (position * audioFormat.getChannels() + channel) * bytesPerSample;
-        data.copyTo(targetData, dataPosition, bytesPerSample, 0);
+        targetData.replace(0, data, dataPosition, bytesPerSample);
     }
 
     public int getRatioValue(int position, int channel, int height) {
@@ -240,10 +240,10 @@ public class XBWave implements XBPSequenceSerializable {
         return (int) (((long) value * height) >> audioFormat.getSampleSizeInBits());
     }
 
-    public void setValue(XBBlockData sourceData, int position, int channel) {
+    public void setValue(BinaryData sourceData, int position, int channel) {
         int bytesPerSample = audioFormat.getSampleSizeInBits() >> 3;
         int dataPosition = (position * audioFormat.getChannels() + channel) * bytesPerSample;
-        sourceData.copyTo(data, 0, bytesPerSample, dataPosition);
+        data.replace(dataPosition, sourceData, 0, bytesPerSample);
     }
 
     public void setRatioValue(int pos, int value, int channel, int height) {
@@ -298,10 +298,10 @@ public class XBWave implements XBPSequenceSerializable {
      * @param length length in ticks
      * @return data blob
      */
-    public XBData cutData(int startPosition, int length) {
+    public BinaryData cutData(int startPosition, int length) {
         long startDataPos = startPosition * audioFormat.getChannels() * 2;
         long dataLength = length * audioFormat.getChannels() * 2;
-        XBData cutData = data.copy(startDataPos, dataLength);
+        BinaryData cutData = data.copy(startDataPos, dataLength);
         data.remove(startDataPos, dataLength);
         return cutData;
     }
@@ -316,7 +316,7 @@ public class XBWave implements XBPSequenceSerializable {
         long dataLength = length * audioFormat.getChannels() * 2;
         XBWave waveCopy = new XBWave();
         waveCopy.audioFormat = audioFormat;
-        data.copyTo(waveCopy.data, startDataPos, dataLength, 0);
+        waveCopy.data.insert(0, data, startDataPos, dataLength);
         return waveCopy;
     }
 

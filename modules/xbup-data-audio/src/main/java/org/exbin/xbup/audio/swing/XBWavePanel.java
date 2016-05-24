@@ -28,18 +28,18 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import org.exbin.utils.binary_data.BinaryData;
 import org.exbin.xbup.audio.swing.renderer.DotsRenderer;
 import org.exbin.xbup.audio.swing.renderer.IntegralRenderer;
 import org.exbin.xbup.audio.swing.renderer.LineRenderer;
 import org.exbin.xbup.audio.swing.renderer.XBWavePanelRenderer;
 import org.exbin.xbup.audio.wave.XBWave;
-import org.exbin.xbup.core.block.XBBlockData;
 import org.exbin.xbup.core.type.XBData;
 
 /**
- * Simple panel audio wave.
+ * Simple audio wave panel.
  *
- * @version 0.2.0 2016/02/06
+ * @version 0.2.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
 public class XBWavePanel extends JPanel {
@@ -65,9 +65,9 @@ public class XBWavePanel extends JPanel {
 
     public XBWavePanel() {
         super();
-        setBackground(Color.WHITE);
-        repaint();
-        setOpaque(true);
+        super.setBackground(Color.WHITE);
+        super.repaint();
+        super.setOpaque(true);
         drawMode = DrawMode.DOTS_MODE;
         toolMode = ToolMode.SELECTION;
         cursorPosition = 0;
@@ -79,7 +79,7 @@ public class XBWavePanel extends JPanel {
         if (selectionColor == null) {
             selectionColor = Color.LIGHT_GRAY;
         }
-        addMouseListener(new MouseAdapter() {
+        super.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
                 if (me.getButton() == MouseEvent.BUTTON1) {
@@ -124,7 +124,7 @@ public class XBWavePanel extends JPanel {
             }
 
         });
-        addMouseMotionListener(new MouseMotionAdapter() {
+        super.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent me) {
                 if (mouseDown) {
@@ -167,7 +167,7 @@ public class XBWavePanel extends JPanel {
             }
 
         });
-        addMouseWheelListener(new MouseWheelListener() {
+        super.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 int position = windowPosition + (int) (e.getPoint().x / scaleRatio);
@@ -381,10 +381,10 @@ public class XBWavePanel extends JPanel {
                     } else {
                         wave.getValue(levelRecord.value, position, channel);
                         if (!dataIsGreaterOrEqual(levelRecord.minValue, levelRecord.value, levelRecord.bytesPerSample)) {
-                            levelRecord.value.copyTo(levelRecord.minValue, 0, levelRecord.bytesPerSample, 0);
+                            levelRecord.minValue.replace(0, levelRecord.value, 0, levelRecord.bytesPerSample);
                         }
                         if (dataIsGreater(levelRecord.value, levelRecord.maxValue, levelRecord.bytesPerSample)) {
-                            levelRecord.value.copyTo(levelRecord.maxValue, 0, levelRecord.bytesPerSample, 0);
+                            levelRecord.maxValue.replace(0, levelRecord.value, 0, levelRecord.bytesPerSample);
                         }
                     }
                 }
@@ -482,7 +482,7 @@ public class XBWavePanel extends JPanel {
         this.zoomChangedListener = zoomChangedListener;
     }
 
-    private static boolean dataIsGreater(XBBlockData data, XBBlockData comparedData, int bytesCount) {
+    private static boolean dataIsGreater(BinaryData data, BinaryData comparedData, int bytesCount) {
         for (int i = 0; i < bytesCount; i++) {
             if (data.getByte(i) > comparedData.getByte(i)) {
                 return true;
@@ -493,7 +493,7 @@ public class XBWavePanel extends JPanel {
         return false;
     }
 
-    private static boolean dataIsGreaterOrEqual(XBBlockData data, XBBlockData comparedData, int bytesCount) {
+    private static boolean dataIsGreaterOrEqual(BinaryData data, BinaryData comparedData, int bytesCount) {
         for (int i = 0; i < bytesCount; i++) {
             if (data.getByte(i) > comparedData.getByte(i)) {
                 return true;
