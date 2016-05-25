@@ -306,7 +306,7 @@ public class XBWave implements XBPSequenceSerializable {
         return cutData;
     }
 
-    public void insertData(XBData deletedData, int startPosition) {
+    public void insertData(BinaryData deletedData, int startPosition) {
         long startDataPos = startPosition * audioFormat.getChannels() * 2;
         data.insert(startDataPos, deletedData);
     }

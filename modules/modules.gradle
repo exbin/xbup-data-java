@@ -5,7 +5,7 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = '1.7'
 version = '0.2.0-SNAPSHOT'
-def repositoryName = "xbup-java"
+def repositoryName = "xbup-data-java"
 def libraryUrl = 'http://xbup.exbin.org'
 ext.xbupVersion = '0.2.0-SNAPSHOT'
 ext.exbinUtilsVersion = '0.1.0-SNAPSHOT'
