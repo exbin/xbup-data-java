@@ -22,7 +22,7 @@ import org.exbin.xbup.audio.swing.XBWavePanel;
 /**
  * Wave renderer interface.
  *
- * @version 0.2.0 2016/02/05
+ * @version 0.2.0 2016/05/25
  * @author ExBin Project (http://exbin.org)
  */
 public interface XBWavePanelRenderer {
@@ -30,11 +30,11 @@ public interface XBWavePanelRenderer {
     /**
      * Renders vertical stripe starting from begin up to end (not inclusive).
      *
-     * @param g
-     * @param panel
-     * @param begin
-     * @param end
-     * @param renderType
+     * @param g graphics
+     * @param panel wave panel
+     * @param begin wave begin position
+     * @param end wave end position
+     * @param renderType rendering type
      */
     void paint(Graphics g, XBWavePanel panel, int begin, int end, RenderType renderType);
 
