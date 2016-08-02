@@ -16,7 +16,7 @@ ext.depsXbupJava = [
     version: '0.2.0-SNAPSHOT'
 ]
 
-ext.depsThis = 'ExbinData'
+ext.depsThis = 'ExbinDataJava'
 
 buildscript {
     repositories {
