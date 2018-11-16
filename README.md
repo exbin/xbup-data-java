@@ -1,4 +1,4 @@
-XBUP: eXtensible Binary Universal Protocol
+XBUP Data Support Libraries
 ==========================================
 
 The goal of this project is to design and to provide an open-source support for unified general binary data representation format.
@@ -19,11 +19,9 @@ Structure
 
 As the project is currently in alpha stage, repository contains complete resources for distribution package with following folders:
 
- * doc - Documentation + related presentations
  * gradle - Gradle wrapper
  * src - Sources related to building distribution packages
  * modules - Libraries and other
- * plugins - Catalog plugins
  * resources - Related resource files, like sample files, images, etc.
  * tools - Distributable subprojects encapsulating modules to runnable applications
 
