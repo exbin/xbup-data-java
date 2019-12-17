@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import org.exbin.utils.binary_data.BinaryData;
+import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.xbup.audio.swing.renderer.DotsRenderer;
 import org.exbin.xbup.audio.swing.renderer.IntegralRenderer;
 import org.exbin.xbup.audio.swing.renderer.LineRenderer;
