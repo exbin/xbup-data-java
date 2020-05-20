@@ -21,7 +21,7 @@ task cleanDeps {
         if (depsCheckFile.exists()) {
             File depsDir = rootProject.file("deps")
             depsDir.listFiles().each() { childFile ->
-                if (childFile.name != '_placeholder' && childFile.isDirectory() && childFile != ".gradle") {
+                if (childFile.name != '_placeholder' && childFile.isDirectory() && childFile.name != ".gradle") {
                     project.delete(childFile)
                 }
             }
@@ -77,7 +77,7 @@ if (!project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
                 duplicatesStrategy = 'exclude'
 
                 from project.rootDir
-                include 'lgpl-3.0.txt', 'gpl-3.0.txt'
+                include 'LICENSE-2.0.txt'
                 from 'src/dist'
                 include 'readme.txt'
 
