@@ -58,7 +58,7 @@ public class XBBNFGrammarRule implements XBSerializable {
     public XBBlockType getBlockType(XBCatalog catalog) {
         Long[] path = new Long[XBUP_BLOCKREV_CATALOGPATH.length];
         for (int i = 0; i < XBUP_BLOCKREV_CATALOGPATH.length; i++) {
-            path[i] = new Long(XBUP_BLOCKREV_CATALOGPATH[i]);
+            path[i] = XBUP_BLOCKREV_CATALOGPATH[i];
         }
 
         XBBlockType contextType = null; // TODO new XBLBlockType(catalog.findBlockTypeByPath(path));

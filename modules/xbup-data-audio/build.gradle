@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compile moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
-    compile moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'paged_data')
-    testCompile group: 'junit', name: 'junit', version: '4.10'    
+    implementation moduleDep('XbupJava', 'org.exbin.xbup', 'xbup-core')
+    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'paged_data')
+    testImplementation group: 'junit', name: 'junit', version: '4.10'    
 }

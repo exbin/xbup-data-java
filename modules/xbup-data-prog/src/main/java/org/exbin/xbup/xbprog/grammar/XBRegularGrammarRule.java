@@ -48,7 +48,7 @@ public class XBRegularGrammarRule implements XBSerializable {
     public XBBlockType getBlockType(XBCatalog catalog) {
         Long[] path = new Long[XBUP_BLOCKREV_CATALOGPATH.length];
         for (int i = 0; i < XBUP_BLOCKREV_CATALOGPATH.length; i++) {
-            path[i] = new Long(XBUP_BLOCKREV_CATALOGPATH[i]);
+            path[i] = XBUP_BLOCKREV_CATALOGPATH[i];
         }
         XBBlockType context = null; //new XBDBlockType(catalog.findBlockTypeByPath(path));
         if (context == null) {
