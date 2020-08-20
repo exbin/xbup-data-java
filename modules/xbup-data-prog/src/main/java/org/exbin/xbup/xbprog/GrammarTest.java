@@ -30,7 +30,6 @@ import org.exbin.xbup.catalog.XBAECatalog;
 import org.exbin.xbup.catalog.entity.manager.XBEXDescManager;
 import org.exbin.xbup.catalog.entity.manager.XBEXLangManager;
 import org.exbin.xbup.catalog.entity.manager.XBEXNameManager;
-import org.exbin.xbup.catalog.update.XBCUpdatePHPHandler;
 import org.exbin.xbup.core.catalog.base.manager.XBCXDescManager;
 import org.exbin.xbup.core.catalog.base.manager.XBCXLangManager;
 import org.exbin.xbup.core.catalog.base.manager.XBCXNameManager;
@@ -63,10 +62,10 @@ public class GrammarTest {
         catalog.addCatalogManager(XBCXLangManager.class, new XBEXLangManager(catalog));
         catalog.addCatalogManager(XBCXNameManager.class, new XBEXNameManager(catalog));
         catalog.addCatalogManager(XBCXDescManager.class, new XBEXDescManager(catalog));
-        XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalog);
-        wsHandler.init();
-        wsHandler.getPort().getLanguageId("en");
-        catalog.setUpdateHandler(wsHandler);
+//        XBCUpdatePHPHandler wsHandler = new XBCUpdatePHPHandler(catalog);
+//        wsHandler.init();
+//        wsHandler.getPort().getLanguageId("en");
+//        catalog.setUpdateHandler(wsHandler);
 
         //
         XBRegularGrammar regularGrammar = new XBRegularGrammar();

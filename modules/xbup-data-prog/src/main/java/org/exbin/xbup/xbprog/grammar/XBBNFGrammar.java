@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import org.exbin.xbup.core.block.declaration.XBDeclaration;
 import org.exbin.xbup.core.block.declaration.local.XBLFormatDecl;
-import org.exbin.xbup.core.parser.XBParseException;
+import org.exbin.xbup.core.parser.XBParsingException;
 import org.exbin.xbup.core.serial.XBSerializable;
 
 /**
@@ -112,17 +112,17 @@ public class XBBNFGrammar implements XBSerializable {
         return builder.toString();
     }
 
-    public void parseGrammarDefinition(String grammar) throws XBParseException {
+    public void parseGrammarDefinition(String grammar) throws XBParsingException {
         String[] lines = grammar.split(System.getProperty("line.separator"));
         for (String line : lines) {
             String[] words = line.split(" ");
             if (words.length < 3) {
-                throw new XBParseException("Missing at least one component: " + line);
+                throw new XBParsingException("Missing at least one component: " + line);
             }
             XBBNFGrammarRule rule = new XBBNFGrammarRule();
             rule.setRuleName(words[0]);
             if (!"::=".equals(words[1])) {
-                throw new XBParseException("Expected \"::=\" :" + line);
+                throw new XBParsingException("Expected \"::=\" :" + line);
             }
             int j = 2;
             boolean merge = false;
