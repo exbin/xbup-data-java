@@ -15,6 +15,8 @@
  */
 package org.exbin.xbup.visual.xbplugins;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
@@ -33,6 +35,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import org.exbin.xbup.core.parser.XBProcessingException;
 import org.exbin.xbup.core.serial.param.XBPInputSerialHandler;
 import org.exbin.xbup.core.serial.param.XBPOutputSerialHandler;
@@ -40,31 +43,31 @@ import org.exbin.xbup.core.serial.param.XBPSerializable;
 import org.exbin.xbup.visual.picture.XBBufferedImage;
 
 /**
- * Preview panel allowing replacing image.
+ * Panel for viewing image.
  *
- * @version 0.1.24 2015/01/24
+ * @version 0.2.1 2020/09/25
  * @author ExBin Project (http://exbin.org)
  */
-public class XBPicturePanel extends javax.swing.JPanel implements XBPSerializable {
+public class XBPictureViewerPanel extends javax.swing.JPanel implements XBPSerializable {
+    
+    private static final int BLOCK_WIDTH = 24;
+    private static final int BLOCK_HEIGHT = 24;
 
-    private final JFileChooser openFC, saveFC;
+    private final JFileChooser saveFC;
     private ChangeListener changeListener = null;
 
-    public XBPicturePanel() {
+    public XBPictureViewerPanel() {
         initComponents();
 
         // Create File Choosers
-        openFC = new JFileChooser();
         saveFC = new JFileChooser();
         String[] formats = ImageIO.getReaderFormatNames();
         for (String ext : formats) {
             if (ext.toLowerCase().equals(ext)) {
                 ImageFileFilter filter = new ImageFileFilter(ext);
-                openFC.addChoosableFileFilter(filter);
                 saveFC.addChoosableFileFilter(filter);
             }
         }
-        openFC.setAcceptAllFileFilterUsed(true);
         saveFC.setAcceptAllFileFilterUsed(true);
 //        openFC.setFileFilter(openFC.getAcceptAllFileFilter());
 //        saveFC.setFileFilter(saveFC.getAcceptAllFileFilter());
@@ -80,85 +83,74 @@ public class XBPicturePanel extends javax.swing.JPanel implements XBPSerializabl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        imagePopupMenu = new javax.swing.JPopupMenu();
+        exportMenuItem = new javax.swing.JMenuItem();
         imageScrollPane = new javax.swing.JScrollPane();
+        imagePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Dimension size = getSize();
+                int hBlocks = (size.width + BLOCK_WIDTH - 1) / BLOCK_WIDTH;
+                int vBlocks = (size.height + BLOCK_HEIGHT - 1) / BLOCK_HEIGHT;
+                g.setColor(new Color(240, 240, 240));
+                for (int x = 0; x < hBlocks; x++) {
+                    for (int y = 0; y < vBlocks; y++) {
+                        if ((x & 1) != (y & 1)) {
+                            g.fillRect(x * BLOCK_WIDTH, y * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+                        }
+                    }
+                }
+            }
+        };
+        ;
         imageLabel = new javax.swing.JLabel();
-        importButton = new javax.swing.JButton();
-        exportButton = new javax.swing.JButton();
+
+        exportMenuItem.setText("Export...");
+        exportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportMenuItemActionPerformed(evt);
+            }
+        });
+        imagePopupMenu.add(exportMenuItem);
+
+        setLayout(new java.awt.BorderLayout());
+
+        imagePanel.setBackground(new java.awt.Color(255, 255, 255));
+        imagePanel.setLayout(new java.awt.BorderLayout());
 
         imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         imageLabel.setAutoscrolls(true);
         imageLabel.setDoubleBuffered(true);
-        imageScrollPane.setViewportView(imageLabel);
+        imagePanel.add(imageLabel, java.awt.BorderLayout.CENTER);
 
-        importButton.setText("Import...");
-        importButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importButtonActionPerformed(evt);
-            }
-        });
+        imageScrollPane.setViewportView(imagePanel);
 
-        exportButton.setText("Export...");
-        exportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exportButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(exportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(importButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(exportButton)))
-                .addContainerGap())
-        );
+        add(imageScrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
-    if (openFC.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-        imageLabel.setIcon(new ImageIcon(openFC.getSelectedFile().getAbsolutePath()));
-        fireChangePerformed();
-    }
-}//GEN-LAST:event_importButtonActionPerformed
-
-private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
-    if (saveFC.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-        try {
-            File file = new File(saveFC.getSelectedFile().getAbsolutePath());
-            String ext = "png";
-            if (saveFC.getFileFilter() instanceof ImageFileFilter) {
-                ext = ((ImageFileFilter) saveFC.getFileFilter()).getExt();
+    private void exportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMenuItemActionPerformed
+        if (saveFC.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try {
+                File file = new File(saveFC.getSelectedFile().getAbsolutePath());
+                String ext = "png";
+                if (saveFC.getFileFilter() instanceof ImageFileFilter) {
+                    ext = ((ImageFileFilter) saveFC.getFileFilter()).getExt();
+                }
+                ImageIO.write(toBufferedImage(((ImageIcon) imageLabel.getIcon()).getImage()), ext, file);
+                imageLabel.setIcon(new ImageIcon(saveFC.getSelectedFile().getAbsolutePath()));
+            } catch (IOException ex) {
+                Logger.getLogger(XBPictureViewerPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-            ImageIO.write(toBufferedImage(((ImageIcon) imageLabel.getIcon()).getImage()), ext, file);
-            imageLabel.setIcon(new ImageIcon(saveFC.getSelectedFile().getAbsolutePath()));
-        } catch (IOException ex) {
-            Logger.getLogger(XBPicturePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-}//GEN-LAST:event_exportButtonActionPerformed
+    }//GEN-LAST:event_exportMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton exportButton;
+    private javax.swing.JMenuItem exportMenuItem;
     private javax.swing.JLabel imageLabel;
+    private javax.swing.JPanel imagePanel;
+    private javax.swing.JPopupMenu imagePopupMenu;
     private javax.swing.JScrollPane imageScrollPane;
-    private javax.swing.JButton importButton;
     // End of variables declaration//GEN-END:variables
 
     // This method returns a buffered image with the contents of an image

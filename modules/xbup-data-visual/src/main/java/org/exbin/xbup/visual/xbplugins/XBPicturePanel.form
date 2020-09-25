@@ -52,6 +52,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="imageLabel">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="autoscrolls" type="boolean" value="true"/>
             <Property name="doubleBuffered" type="boolean" value="true"/>
           </Properties>
