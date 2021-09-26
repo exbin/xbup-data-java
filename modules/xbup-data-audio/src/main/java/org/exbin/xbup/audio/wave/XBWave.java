@@ -254,7 +254,7 @@ public class XBWave implements XBPSequenceSerializable {
         int pomValue = ((value - (height / 2)) << 16) / height;
         block[offset] = (byte) (pomValue & 255);
         block[offset + 1] = (byte) ((pomValue >> 8) & 255);
-        data.setPage(chunk, block);
+        data.replace((long) chunk * data.getPageSize(), block);
         /*        int value = 127 + getBlock(chunk)[offset] + (getBlock(chunk)[offset+1] + 127)*256;
          return (int) ((long) value * height) / 65536; */
     }
