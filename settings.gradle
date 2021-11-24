@@ -7,7 +7,7 @@ include ":modules:xbup-data-visual"
 include ":modules:xbup-data-math"
 include ":modules:xbup-data-prog"
 
-File placeholder = file("deps/_placeholder")
+File placeholder = file("deps/.downloaded")
 if (placeholder.exists()) {
     placeholder.delete()
 }
@@ -20,5 +20,11 @@ if (!gradle.startParameter.taskNames.contains("clean") || gradle.startParameter.
             include ':deps:' + childFile.name
         }
     }
+}
+
+gradle.allprojects {
+  ext {
+    depsRoot = 'XbupDataJava'
+  }
 }
 
