@@ -5,7 +5,7 @@ This repository contains experimental Java implementation of libraries for repre
 
 XBUP is binary data protocol and file format for communication, data storage and application interfaces. 
 
-Homepage: http://xbup.exbin.org  
+Homepage: https://xbup.exbin.org  
 
 Structure
 ---------
