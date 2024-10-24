@@ -1,13 +1,13 @@
 // Shared modules build
 
 version = '0.3.0-SNAPSHOT'
-def repositoryName = "xbup-data-java"
+def repositoryName = "bined-java"
 def githubProfile = 'exbin'
-def libraryUrl = 'https://xbup.exbin.org'
+def libraryUrl = 'https://bined.exbin.org/library'
 
-ext.depsThis = 'XbupDataJava'
+ext.depsThis = 'BinedJava'
 
-ext.depsXbupDataJava = [
+ext.depsBinedJava = [
     githubProfile: githubProfile,
     githubRepo   : repositoryName,
     version      : version
@@ -18,14 +18,6 @@ ext.depsExbinAuxiliaryJava = [
     githubRepo: 'exbin-auxiliary-java',
     version: '0.2.2-SNAPSHOT'
 ]
-
-ext.depsXbupJava = [
-    githubProfile: 'exbin',
-    githubRepo: 'xbup-java',
-    version: '0.3.0-SNAPSHOT'
-]
-
-import org.gradle.util.VersionNumber
 
 apply from: '../deps_processing.gradle'
 
@@ -39,14 +31,6 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     doFirst {
         options.fork = true
-        if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-            if (VersionNumber.parse(gradle.gradleVersion) >= VersionNumber.parse('5.0')) {
-                options.bootstrapClasspath = files("${System.properties['java.home']}/lib/rt.jar", "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar")
-            } else {
-                options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar"
-                options.bootClasspath += "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
-            }
-        }
     }
 }
 
@@ -72,6 +56,9 @@ artifacts {
 task sourceJar(type: Jar) {
     archiveClassifier = 'sources'
     from sourceSets.main.java
+}
+
+javadoc {
 }
 
 task javadocJar (type: Jar, dependsOn: javadoc) {
@@ -103,8 +90,8 @@ publishing {
                     }
                     licenses {
                         license {
-                            name 'LGPL license, Version 3.0'
-                            url 'https://www.gnu.org/licenses/lgpl.txt'
+                            name 'Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                             distribution 'repo'
                         }
                     }
@@ -122,6 +109,62 @@ publishing {
 
     repositories {
         mavenLocal()
+    }
+}
+
+if (gradle.startParameter.taskNames.contains("uploadArchives") && !version.endsWith('-SNAPSHOT')) {
+    artifacts {
+        archives javadocJar, sourceJar
+    }
+
+    signing {
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+//                beforeDeployment {
+//                    MavenDeployment deployment -> signing.signPom(deployment)
+//                }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name libraryName
+                    packaging 'jar'
+                    description libraryDescription
+                    url libraryUrl
+                    organization 'ExBin Project'
+
+                    scm {
+                        url "https://github.com/${githubProfile}/${repositoryName}"
+                        connection "cm:git:git://github.com/${githubProfile}/${repositoryName}.git"
+                        developerConnection "scm:git:git@github.com:${githubProfile}/${repositoryName}.git"
+                    }
+                    licenses {
+                        license {
+                            name 'Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'HajdaM'
+                            name 'Miroslav Hajda'
+                            email 'hajdam@users.sf.net'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
