@@ -13,7 +13,7 @@ task cleanDeps {
         if (depsCheckFile.exists()) {
             File depsDir = rootProject.file("deps")
             depsDir.listFiles().each() { childFile ->
-                if (childFile.isDirectory() && childFile.name != ".gradle") {
+                if ((childFile.isDirectory() && childFile.name != ".gradle") || childFile.name.endsWith(".zip")) {
                     project.delete(childFile)
                 }
             }

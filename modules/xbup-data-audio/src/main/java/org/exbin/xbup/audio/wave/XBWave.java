@@ -26,6 +26,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import org.exbin.auxiliary.binary_data.BinaryData;
+import org.exbin.auxiliary.binary_data.ByteArrayData;
+import org.exbin.auxiliary.binary_data.ByteArrayEditableData;
 import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.xbup.core.block.declaration.XBDeclBlockType;
 import org.exbin.xbup.core.parser.XBProcessingException;
@@ -133,47 +135,22 @@ public class XBWave implements XBPSequenceSerializable {
 
     public void performTransformReverse(long startPosition, long endPosition) {
         if (!data.isEmpty()) {
-            long startDataPos = startPosition * audioFormat.getChannels() * 2;
-            long endDataPos = endPosition * audioFormat.getChannels() * 2;
-
             // TODO support for non-whole-byte alignment later
             int sampleSize = audioFormat.getSampleSizeInBits() / 8;
-            byte[] buffer = new byte[sampleSize];
-            long remaining = endPosition - startPosition;
-            int headBlockIndex = (int) (startDataPos / data.getPageSize());
-            int headPosition = (int) (startDataPos % data.getPageSize());
-            byte[] headBlock = data.getPage(headBlockIndex);
-            int tailBlockIndex = (int) (endDataPos / data.getPageSize());
-            int tailPosition = (int) (endDataPos % data.getPageSize());
-            byte[] tailBlock = data.getPage(tailBlockIndex);
+            long startDataPos = startPosition * audioFormat.getChannels() * sampleSize;
+            long endDataPos = endPosition * audioFormat.getChannels() * sampleSize;
+
+            byte[] buffer1 = new byte[sampleSize];
+            byte[] buffer2 = new byte[sampleSize];
+            long remaining = (endPosition - startPosition) * audioFormat.getChannels();
 
             while (remaining > 0) {
-                if (headPosition + sampleSize <= data.getPageSize()) {
-                    System.arraycopy(headBlock, headPosition, buffer, 0, sampleSize);
-                    headPosition += sampleSize;
-                } else {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-
-                if (tailPosition >= sampleSize) {
-                    System.arraycopy(tailBlock, tailPosition - sampleSize, headBlock, headPosition - sampleSize, sampleSize);
-                    System.arraycopy(buffer, 0, tailBlock, tailPosition - sampleSize, sampleSize);
-                    tailPosition -= sampleSize;
-                } else {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-
-                if (headPosition == data.getPageSize()) {
-                    headPosition = 0;
-                    headBlockIndex++;
-                    headBlock = data.getPage(headBlockIndex);
-                }
-
-                if (tailPosition == 0) {
-                    tailPosition = data.getPageSize();
-                    tailBlockIndex--;
-                    tailBlock = data.getPage(tailBlockIndex);
-                }
+                data.copyToArray(startDataPos, buffer1, 0, sampleSize);
+                endDataPos -= sampleSize;
+                data.copyToArray(endDataPos, buffer2, 0, sampleSize);
+                data.replace(startDataPos, buffer2, 0, sampleSize);
+                data.replace(endDataPos, buffer1, 0, sampleSize);
+                startDataPos += sampleSize;
 
                 remaining--;
             }
@@ -222,16 +199,16 @@ public class XBWave implements XBPSequenceSerializable {
 
         long value;
         if (audioFormat.getEncoding() == AudioFormat.Encoding.PCM_UNSIGNED) {
-            value = data.getPage(chunk)[offset] & 0xFF;
+            value = data.getPage(chunk).getByte(offset) & 0xFF;
         } else {
-            value = data.getPage(chunk)[offset];
+            value = data.getPage(chunk).getByte(offset);
         }
         if (bytesPerSample > 1) {
-            value += ((long) ((data.getPage(chunk)[offset + 1] + 127)) << 8);
+            value += ((long) ((data.getPage(chunk).getByte(offset + 1) + 127)) << 8);
             if (bytesPerSample > 2) {
-                value += ((long) ((data.getPage(chunk)[offset + 2] + 127)) << 16);
+                value += ((long) ((data.getPage(chunk).getByte(offset + 2) + 127)) << 16);
                 if (bytesPerSample > 3) {
-                    value += ((long) ((data.getPage(chunk)[offset + 3] + 127)) << 24);
+                    value += ((long) ((data.getPage(chunk).getByte(offset + 3) + 127)) << 24);
                 }
             }
         }
@@ -249,11 +226,12 @@ public class XBWave implements XBPSequenceSerializable {
         // TODO: support for different bitsize
         int chunk = ((pos * audioFormat.getChannels() + channel) * 2) / data.getPageSize();
         int offset = ((pos * audioFormat.getChannels() + channel) * 2) % data.getPageSize();
-        byte[] block = data.getPage(chunk);
+        ByteArrayEditableData block = new ByteArrayEditableData();
+        block.insert(0, data.getPage(chunk));
 
         int pomValue = ((value - (height / 2)) << 16) / height;
-        block[offset] = (byte) (pomValue & 255);
-        block[offset + 1] = (byte) ((pomValue >> 8) & 255);
+        block.setByte(offset, (byte) (pomValue & 255));
+        block.setByte(offset + 1, (byte) ((pomValue >> 8) & 255));
         data.replace((long) chunk * data.getPageSize(), block);
         /*        int value = 127 + getBlock(chunk)[offset] + (getBlock(chunk)[offset+1] + 127)*256;
          return (int) ((long) value * height) / 65536; */
