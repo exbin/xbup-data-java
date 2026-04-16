@@ -1,5 +1,5 @@
 /*
- * Copyright (C) ExBin Project
+ * Copyright (C) ExBin Project, https://exbin.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,6 @@ import org.exbin.xbup.core.serial.param.XBPSerializable;
 
 /**
  * Bitmap Picture Raster (Testing only).
- *
- * @version 0.1.24 2015/01/24
- * @author ExBin Project (http://exbin.org)
  */
 public class XBWritableRaster extends WritableRaster implements XBPSerializable {
 

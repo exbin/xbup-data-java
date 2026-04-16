@@ -1,5 +1,5 @@
 /*
- * Copyright (C) ExBin Project
+ * Copyright (C) ExBin Project, https://exbin.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,6 @@ import org.exbin.xbup.core.serial.XBSerializable;
  * ruleName ::= rule1 | rule2 | ... | ruleN (Rule alternatives) Variant 3:
  * ruleName ::= terminal (Terminal string) Variant 4: ruleName ::= charA1 ..
  * charAN | charB1 .. char BN | .. | charZ1 .. char ZN (Char ranges)
- *
- * @version 0.1.19 2010/06/04
- * @author ExBin Project (http://exbin.org)
  */
 public class XBBNFGrammarRule implements XBSerializable {
 

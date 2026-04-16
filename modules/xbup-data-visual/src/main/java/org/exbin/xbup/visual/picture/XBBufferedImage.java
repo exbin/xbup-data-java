@@ -1,5 +1,5 @@
 /*
- * Copyright (C) ExBin Project
+ * Copyright (C) ExBin Project, https://exbin.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,6 @@ import org.exbin.xbup.core.ubnumber.type.UBNat32;
 
 /**
  * BufferedImage serialization wrapper.
- *
- * @version 0.1.25 2015/02/03
- * @author ExBin Project (http://exbin.org)
  */
 public class XBBufferedImage implements XBPSerializable {
 
