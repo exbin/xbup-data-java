@@ -25,9 +25,10 @@ import org.exbin.xbup.core.serial.XBSerializable;
 
 /**
  * XBUP String-BNF Context-Free Grammar Rule
- * http://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form TODO: This is
- * simplified version
- *
+ * http://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form
+ * <p>
+ * TODO: This is simplified version
+ * <p>
  * Variant 1: ruleName ::= rule1 rule2 ... ruleN (Rule sequence) Variant 2:
  * ruleName ::= rule1 | rule2 | ... | ruleN (Rule alternatives) Variant 3:
  * ruleName ::= terminal (Terminal string) Variant 4: ruleName ::= charA1 ..
@@ -35,7 +36,7 @@ import org.exbin.xbup.core.serial.XBSerializable;
  */
 public class XBBNFGrammarRule implements XBSerializable {
 
-    public static long[] XBUP_BLOCKREV_CATALOGPATH = {0, 1, 1, 2};
+    public static final long[] XBUP_BLOCKREV_CATALOGPATH = {0, 1, 1, 2};
 
     private String ruleName;
     private List<String> rules;

@@ -41,7 +41,7 @@ import org.exbin.xbup.core.type.XBData;
 public class XBWavePanel extends JPanel {
 
     private XBWave wave;
-    private List<XBWave> zoomCache = new ArrayList<>();
+    private final List<XBWave> zoomCache = new ArrayList<>();
 
     private int windowPosition;
     private int cursorPosition;

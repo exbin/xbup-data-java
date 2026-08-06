@@ -35,8 +35,8 @@ public class XBBufferedImage implements XBPSerializable {
 
     private BufferedImage image;
 
-    public static long[] XBUP_BLOCKREV_CATALOGPATH = {1, 4, 0, 0, 2, 0};
-    public static long[] XBUP_FORMATREV_CATALOGPATH = {1, 4, 0, 1, 0};
+    public static final long[] XBUP_BLOCKREV_CATALOGPATH = {1, 4, 0, 0, 2, 0};
+    public static final long[] XBUP_FORMATREV_CATALOGPATH = {1, 4, 0, 1, 0};
 
     public XBBufferedImage() {
         image = null;
